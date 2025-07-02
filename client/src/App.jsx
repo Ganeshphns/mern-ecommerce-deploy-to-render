@@ -1,0 +1,121 @@
+import { Routes, Route } from "react-router-dom";
+import { Skeleton } from "@/components/ui/skeleton";
+import AuthLayout from "./components/auth/layout";
+import AuthLogin from "./pages/auth/login";
+import AuthRegister from "./pages/auth/register";
+import AdminLayout from "./components/admin-view/layout";
+import AdminDashBoard from "./pages/admin-view/dashboard";
+import AdminProducts from "./pages/admin-view/products";
+import AdminOrders from "./pages/admin-view/orders";
+import AdminFeatures from "./pages/admin-view/features";
+import ShoppingLayOut from "./components/shopping-view/layout";
+import { Navigate } from "react-router-dom";
+import ShoppingHome from "./pages/shopping-view/home";
+import ShoppingListing from "./pages/shopping-view/listing";
+import ShoppingCheckOut from "./pages/shopping-view/checkout";
+import ShoppingAccount from "./pages/shopping-view/account";
+import NotFound from "./pages/not-found";
+import CheckAuth from "./components/common/check-auth";
+import UnauthPage from "./pages/unauth-page";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { checkAuth } from "./store/auth-slice";
+function App() {
+  const { isAuthenticated, user, isLoading } = useSelector(
+    (state) => state.auth
+  );
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(checkAuth());
+  }, [dispatch]);
+
+//   if (isLoading)
+//     return (
+      
+//       <div class="flex items-center space-x-4">
+//   <div class="h-12 w-12 rounded-full bg-gray-300"></div>
+//   <div class="space-y-2">
+//     <div class="h-4 w-[250px] bg-gray-300"></div>
+//     <div class="h-4 w-[200px] bg-gray-300"></div>
+//   </div>
+// </div>
+//     );
+if (isLoading)
+  return (
+    <div className="min-h-screen bg-white p-6 space-y-6 animate-pulse">
+      {/* Header skeleton */}
+      <div className="h-8 w-1/3 bg-gray-300 rounded" />
+
+      {/* Form or content skeleton */}
+      <div className="space-y-4">
+        {[...Array(4)].map((_, idx) => (
+          <div key={idx}>
+            <div className="h-4 w-1/4 bg-gray-300 rounded mb-2" />
+            <div className="h-10 w-full bg-gray-300 rounded" />
+          </div>
+        ))}
+      </div>
+
+      {/* Submit button skeleton */}
+      <div className="h-10 w-32 bg-gray-300 rounded" />
+    </div>
+  );
+
+
+
+  return (
+    <div className="flex flex-col overflow-hidden bg-white">
+      {/* common componnets
+      <h1>Header components </h1> */}
+
+      <Routes>
+        <Route path="/" element={<Navigate to="/auth/login" />} />
+        <Route
+          path="/auth"
+          element={
+            <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+              <AuthLayout />
+            </CheckAuth>
+          }
+        >
+          <Route path="login" element={<AuthLogin />} />
+          <Route path="register" element={<AuthRegister />} />
+        </Route>
+
+        <Route
+          path="/admin"
+          element={
+            <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+              <AdminLayout />
+            </CheckAuth>
+          }
+        >
+          <Route path="dashboard" element={<AdminDashBoard />} />
+          <Route path="products" element={<AdminProducts />} />
+          <Route path="orders" element={<AdminOrders />} />
+          <Route path="features" element={<AdminFeatures />} />
+        </Route>
+        <Route
+          path="/shop"
+          element={
+            <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+              <ShoppingLayOut />
+            </CheckAuth>
+          }
+        >
+          <Route path="home" element={<ShoppingHome />} />
+          <Route path="listing" element={<ShoppingListing />} />
+          <Route path="checkout" element={<ShoppingCheckOut />} />
+          <Route path="account" element={<ShoppingAccount />} />
+        </Route>
+
+        <Route path="/unauth" element={<UnauthPage />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </div>
+  );
+}
+
+export default App;
