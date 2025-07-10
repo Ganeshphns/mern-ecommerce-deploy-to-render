@@ -1,34 +1,40 @@
-import { Label } from "@radix-ui/react-label";
+import { FileIcon, UploadCloudIcon, XIcon } from "lucide-react";
 import { Input } from "../ui/input";
+import { Label } from "../ui/label";
 import { useEffect, useRef } from "react";
 import { Button } from "../ui/button";
 import axios from "axios";
-import { FileIcon, UploadCloudIcon, XIcon } from "lucide-react";
 import { Skeleton } from "../ui/skeleton";
 
-function ProductImageUpload({
+ export default function ProductImageUpload({
   imageFile,
   setImageFile,
-  uploadImageUrl,
-  setUploadImageUrl,
   imageLoadingState,
+  uploadedImageUrl,
+  setUploadedImageUrl,
   setImageLoadingState,
   isEditMode,
+  isCustomStyling = false,
 }) {
   const inputRef = useRef(null);
-  function handleImageFileChange(e) {
-    console.log(e.target.files);
-    const selectedFile = e.target.files?.[0];
+
+  console.log(isEditMode, "isEditMode");
+
+  function handleImageFileChange(event) {
+    console.log(event.target.files, "event.target.files");
+    const selectedFile = event.target.files?.[0];
+    console.log(selectedFile);
+
     if (selectedFile) setImageFile(selectedFile);
   }
 
   function handleDragOver(event) {
     event.preventDefault();
   }
+
   function handleDrop(event) {
     event.preventDefault();
     const droppedFile = event.dataTransfer.files?.[0];
-
     if (droppedFile) setImageFile(droppedFile);
   }
 
@@ -38,20 +44,19 @@ function ProductImageUpload({
       inputRef.current.value = "";
     }
   }
-  async function uploadImageToCloudinary() {
-    console.log("called");
 
+  async function uploadImageToCloudinary() {
     setImageLoadingState(true);
     const data = new FormData();
     data.append("my_file", imageFile);
     const response = await axios.post(
-      "http://localhost:5000/api/admin/products/upload-image",
+      `${import.meta.env.VITE_API_URL}/api/admin/products/upload-image`,
       data
     );
     console.log(response, "response");
 
     if (response?.data?.success) {
-      setUploadImageUrl(response.data.result.url);
+      setUploadedImageUrl(response.data.result.url);
       setImageLoadingState(false);
     }
   }
@@ -59,9 +64,10 @@ function ProductImageUpload({
   useEffect(() => {
     if (imageFile !== null) uploadImageToCloudinary();
   }, [imageFile]);
+
   return (
     <div
-      className="w-full max-w-md mx-auto mt-4"
+      className={`w-full  mt-4 ${isCustomStyling ? "" : "max-w-md mx-auto"}`}
     >
       <Label className="text-lg font-semibold mb-2 block">Upload Image</Label>
       <div
@@ -82,10 +88,12 @@ function ProductImageUpload({
         {!imageFile ? (
           <Label
             htmlFor="image-upload"
-            className="flex flex-col items-center justify-center  h-32 cursor-pointer "
+            className={`${
+              isEditMode ? "cursor-not-allowed" : ""
+            } flex flex-col items-center justify-center h-32 cursor-pointer`}
           >
             <UploadCloudIcon className="w-10 h-10 text-muted-foreground mb-2" />
-            <span> Drag & drop or click to upload image</span>
+            <span>Drag & drop or click to upload image</span>
           </Label>
         ) : imageLoadingState ? (
           <Skeleton className="h-10 bg-gray-100" />
@@ -95,7 +103,6 @@ function ProductImageUpload({
               <FileIcon className="w-8 text-primary mr-2 h-8" />
             </div>
             <p className="text-sm font-medium">{imageFile.name}</p>
-
             <Button
               variant="ghost"
               size="icon"
@@ -112,4 +119,4 @@ function ProductImageUpload({
   );
 }
 
-export default ProductImageUpload;
+ 

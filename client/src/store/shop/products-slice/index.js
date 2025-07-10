@@ -3,13 +3,13 @@ import axios from "axios";
 const initialState = {
   isLoading: false,
   productList: [],
-  productDetails: null
+  productDetails: null,
 };
 
 export const fetchAllFilteredProducts = createAsyncThunk(
   "/products/fetchAllProducts",
 
-  async ({filterParams, sortParams}) => {
+  async ({ filterParams, sortParams }) => {
     console.log(fetchAllFilteredProducts, "fetchAllFilteredProducts");
 
     const query = new URLSearchParams({
@@ -18,11 +18,11 @@ export const fetchAllFilteredProducts = createAsyncThunk(
     });
     console.log(query, "query11");
     const result = await axios.get(
-      `http://localhost:5000/api/shop/products/get?${query}`
+       `${import.meta.env.VITE_API_URL}/api/shop/products/get?${query}`
     );
 
     console.log("fetchAllFilteredProducts  called");
- console.log(result, "result in fetchAllFilteredProducts");
+    console.log(result, "result in fetchAllFilteredProducts");
     return result?.data;
   }
 );
@@ -32,12 +32,9 @@ export const fetchProductDetails = createAsyncThunk(
   async (id) => {
     console.log(fetchProductDetails, "fetchProductDetails11");
 
-   
     const result = await axios.get(
-      `http://localhost:5000/api/shop/products/get/${id}`
+       `${import.meta.env.VITE_API_URL}/api/shop/products/get/${id}`
     );
-
-    
 
     return result?.data;
   }
@@ -46,7 +43,11 @@ export const fetchProductDetails = createAsyncThunk(
 const shoppingProductsSlice = createSlice({
   name: "shoppingProducts",
   initialState,
-  reducers: {},
+  reducers: {
+    setProductDetails: (state) => {
+      state.productDetails = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchAllFilteredProducts.pending, (state, action) => {
@@ -71,8 +72,10 @@ const shoppingProductsSlice = createSlice({
       })
       .addCase(fetchProductDetails.rejected, (state, action) => {
         state.isLoading = false;
-        state.productDetails= [];
+        state.productDetails = [];
       });
   },
 });
+
+export const { setProductDetails } = shoppingProductsSlice.actions;
 export default shoppingProductsSlice.reducer;

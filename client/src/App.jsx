@@ -20,6 +20,9 @@ import UnauthPage from "./pages/unauth-page";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { checkAuth } from "./store/auth-slice";
+import PaypalReturnpage from "./pages/shopping-view/paypa-return";
+import PaymentSuccessPage from "./pages/shopping-view/payment-success";
+import SearchProducts from "./pages/shopping-view/search";
 function App() {
   const { isAuthenticated, user, isLoading } = useSelector(
     (state) => state.auth
@@ -31,39 +34,37 @@ function App() {
     dispatch(checkAuth());
   }, [dispatch]);
 
-//   if (isLoading)
-//     return (
-      
-//       <div class="flex items-center space-x-4">
-//   <div class="h-12 w-12 rounded-full bg-gray-300"></div>
-//   <div class="space-y-2">
-//     <div class="h-4 w-[250px] bg-gray-300"></div>
-//     <div class="h-4 w-[200px] bg-gray-300"></div>
-//   </div>
-// </div>
-//     );
-if (isLoading)
-  return (
-    <div className="min-h-screen bg-white p-6 space-y-6 animate-pulse">
-      {/* Header skeleton */}
-      <div className="h-8 w-1/3 bg-gray-300 rounded" />
+  //   if (isLoading)
+  //     return (
 
-      {/* Form or content skeleton */}
-      <div className="space-y-4">
-        {[...Array(4)].map((_, idx) => (
-          <div key={idx}>
-            <div className="h-4 w-1/4 bg-gray-300 rounded mb-2" />
-            <div className="h-10 w-full bg-gray-300 rounded" />
-          </div>
-        ))}
+  //       <div class="flex items-center space-x-4">
+  //   <div class="h-12 w-12 rounded-full bg-gray-300"></div>
+  //   <div class="space-y-2">
+  //     <div class="h-4 w-[250px] bg-gray-300"></div>
+  //     <div class="h-4 w-[200px] bg-gray-300"></div>
+  //   </div>
+  // </div>
+  //     );
+  if (isLoading)
+    return (
+      <div className="min-h-screen bg-white p-6 space-y-6 animate-pulse">
+        {/* Header skeleton */}
+        <div className="h-8 w-1/3 bg-gray-300 rounded" />
+
+        {/* Form or content skeleton */}
+        <div className="space-y-4">
+          {[...Array(4)].map((_, idx) => (
+            <div key={idx}>
+              <div className="h-4 w-1/4 bg-gray-300 rounded mb-2" />
+              <div className="h-10 w-full bg-gray-300 rounded" />
+            </div>
+          ))}
+        </div>
+
+        {/* Submit button skeleton */}
+        <div className="h-10 w-32 bg-gray-300 rounded" />
       </div>
-
-      {/* Submit button skeleton */}
-      <div className="h-10 w-32 bg-gray-300 rounded" />
-    </div>
-  );
-
-
+    );
 
   return (
     <div className="flex flex-col overflow-hidden bg-white">
@@ -109,6 +110,11 @@ if (isLoading)
           <Route path="listing" element={<ShoppingListing />} />
           <Route path="checkout" element={<ShoppingCheckOut />} />
           <Route path="account" element={<ShoppingAccount />} />
+          <Route path="paypal-return" element={<PaypalReturnpage />} />
+          <Route path="payment-success" element={<PaymentSuccessPage />} />
+          <Route path="search" element={<SearchProducts />} />
+        
+        
         </Route>
 
         <Route path="/unauth" element={<UnauthPage />} />
