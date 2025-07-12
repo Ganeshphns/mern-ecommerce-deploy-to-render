@@ -24,7 +24,7 @@ import { Button } from "../ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { shoppingViewHeaderMenuItems } from "@/config";
 import { Avatar, AvatarFallback } from "@radix-ui/react-avatar";
-import { logoutUser } from "@/store/auth-slice";
+import { logoutUser, resetTokenAndCredentials } from "@/store/auth-slice";
 import { useEffect, useState } from "react";
 
 import { fetchCartItems } from "@/store/shop/cart-slice";
