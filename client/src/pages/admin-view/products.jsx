@@ -141,8 +141,8 @@ export default function AdminProducts() {
           <ProductImageUpload
             imageFile={imageFile}
             setImageFile={setImageFile}
-            uploadImageUrl={uploadImageUrl}
-            setUploadImageUrl={setUploadImageUrl}
+            uploadedImageUrl={uploadImageUrl}
+            setUploadedImageUrl={setUploadImageUrl}
             imageLoadingState={imageLoadingState}
             setImageLoadingState={setImageLoadingState}
             isEditMode={currentEditedId !== null}
